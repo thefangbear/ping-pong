@@ -13,7 +13,7 @@ public class Main {
     public static String server_address;
     public static int server_port;
     public static int this_port;
-    public static int operating_mode = 1; // 1 = server, 0 = client
+    public static int operating_mode; // 1 = server, 0 = client
     private static void sendPing(String addr, int port) {
         try {
             Socket sock = new Socket(addr, port);
@@ -53,9 +53,6 @@ public class Main {
 
     // entry point
     public static void main(String[] args) {
-        for (String arg : args) {
-            System.out.println(arg);
-        }
         if(args[0].equals("--ping")) {
             String hostAddress = args[1];
             int hostPort = Integer.parseInt(args[2]);
@@ -76,7 +73,7 @@ public class Main {
             RealPong.createPongServer();
             Table.startShow();
         } else if (args[0].equals("--test")) {
-            Table.startShow();
+            System.out.println("haha... if anything?!");
         } else {
             // print usage
             System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>\n" +
