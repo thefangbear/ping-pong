@@ -8,6 +8,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 /**
  * Created by derros on 5/16/17.
  */
@@ -74,6 +76,33 @@ public class Table extends Application {
                 }
                 synchronized (competitorPadAccelerationX) {
                     competitorPadAccelerationX = accC;
+                }
+            }
+        })).start();
+        (new Thread(() -> {
+            while(!isReady);
+            while(primaryStage.isShowing()) {
+                switch(Main.operating_mode) {
+                    case 1: // server
+                        synchronized(Volatiles.newestPongCompetitorLocation) {
+                            competitorRect.setX(Volatiles.newestPongCompetitorLocation);
+                            try {
+                                RealPong.createPongServer().sendSelfXCoord(selfRect.getX());
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                        break;
+                    case 0: // client
+                        synchronized(Volatiles.newestPingCompetitorLocation) {
+                            competitorRect.setX(Volatiles.newestPingCompetitorLocation);
+                            try {
+                                RealPing.getRealPing().sendSelfXCoord(selfRect.getX());
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                        break;
                 }
             }
         })).start();
@@ -249,7 +278,7 @@ public class Table extends Application {
                                 } else {
                                     ballstate = BallStates.NormalState;
                                 }
-
+                                break;
                             }
                         }
                     }

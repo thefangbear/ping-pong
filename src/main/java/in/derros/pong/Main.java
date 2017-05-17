@@ -13,7 +13,7 @@ public class Main {
     public static String server_address;
     public static int server_port;
     public static int this_port;
-
+    public static int operating_mode = 1; // 1 = server, 0 = client
     private static void sendPing(String addr, int port) {
         try {
             Socket sock = new Socket(addr, port);
@@ -65,13 +65,22 @@ public class Main {
             returnPong(port);
         } else if (args[0].equals("--real-ping")) {
             // goes real!!
+            Main.operating_mode = 0;
+            Main.server_port = Integer.parseInt(args[2]);
+            Main.server_address = args[1];
+            RealPing.getRealPing();
+            Table.startShow();
         } else if (args[0].equals("--real-pong")) {
-
+            Main.operating_mode = 1;
+            Main.this_port = Integer.parseInt(args[1]);
+            RealPong.createPongServer();
+            Table.startShow();
         } else if (args[0].equals("--test")) {
             Table.startShow();
         } else {
             // print usage
-            System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>");
+            System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>\n" +
+                    "-real-ping <server address> <server port>\n--real-pong <local port>\n--test\n");
         }
     }
 }

@@ -28,20 +28,36 @@ class RealPing {
         }
     }
 
-    public static RealPing getRealPing() {
+    public synchronized static RealPing getRealPing() {
         if (pingClient == null) {
             pingClient = new RealPing(Main.server_address, Main.server_port);
+            (new Thread(() -> {
+                while(pingClient.isConnected()) {
+                    try {
+                        Double d = pingClient.getCompetitorXCoord();
+                        synchronized(Volatiles.newestPingCompetitorLocation) {
+                            Volatiles.newestPongCompetitorLocation = d;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            })).start();
 
         }
         return pingClient;
     }
 
-    public double getCompetitorXCoord() throws IOException {
+    public synchronized double getCompetitorXCoord() throws IOException {
         return clientInputStream.readDouble();
     }
 
-    public void sendSelfXCoord(double x) throws IOException {
+    public synchronized void sendSelfXCoord(double x) throws IOException {
         clientOutputStream.writeDouble(x);
+    }
+
+    public synchronized boolean isConnected() {
+        return this.clientSocket.isConnected();
     }
 
     public void finalize() {

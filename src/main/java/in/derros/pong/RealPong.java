@@ -25,7 +25,7 @@ public class RealPong {
         }
     }
 
-    public static RealPong createPongServer() {
+    public synchronized static RealPong createPongServer() {
         if (pongServer == null) {
             pongServer = new RealPong(Main.this_port);
             try {
@@ -35,11 +35,28 @@ public class RealPong {
                 e.printStackTrace();
                 System.exit(130);
             }
+            // now let's run a thread
+            (new Thread(() -> {
+                while(pongServer.isConnected()) {
+                    try {
+                        Double d = pongServer.getCompetitorXCoord();
+                        synchronized(Volatiles.newestPongCompetitorLocation) {
+                            Volatiles.newestPongCompetitorLocation = d;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            })).start();
             return pongServer;
         } else {
             return pongServer;
         }
 
+    }
+
+    public synchronized boolean isConnected() {
+        return this.thisSocket.isConnected();
     }
 
     private void createAndAccept() throws IOException {
@@ -48,11 +65,20 @@ public class RealPong {
         serverOutputStream = new DataOutputStream(thisSocket.getOutputStream());
     }
 
-    public double getCompetitorXCoord() throws IOException {
+    public synchronized double getCompetitorXCoord() throws IOException {
         return this.clientInputStream.readDouble();
     }
 
-    public void sendSelfXCoord(double x) throws IOException {
+    public synchronized void sendSelfXCoord(double x) throws IOException {
         this.serverOutputStream.writeDouble(x);
+    }
+
+    public void finalize() {
+        try {
+            thisSocket.close();
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
