@@ -56,6 +56,11 @@ public class Table extends Application {
             double accS = .0, accC = .0;
             while (!isReady) ;
             while (primaryStage.isShowing()) {
+                try {
+                    Thread.sleep(10); // we need a little while
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 // calculate acceleration of pad
                 // pad acc = net change in net change
                 accS = (selfRect.getX() - selfPadX) - velS;
@@ -73,12 +78,12 @@ public class Table extends Application {
             }
         })).start();
         (new Thread(() -> {
-            double initialY = CENTER_Y,
+            double  initialY = CENTER_Y,
                     initialX = CENTER_X,
                     currY = ball.getCenterY(),
                     currX = ball.getCenterX(),
                     accX = .0, accY = .1,
-                    velX = 2, velY = 2;
+                    velX = 0, velY = 2;
             BallStates ballstate = BallStates.InitialState;
             BallStates ballstate2 = BallStates.NullState;
             while (!isReady) ;
@@ -160,11 +165,14 @@ public class Table extends Application {
                             case TransitionalState: {
                                 // check if touched boundaries
                                 if (ballstate2 != BallStates.NullState) {
+                                    System.out.println("Ball State 2 triggered when ball is " + ballstate + "bs2 is " + ballstate2);
                                     ballstate = ballstate2;
                                     ballstate2 = BallStates.NullState;
                                     continue; // go on for another iteration to handle concurrent edge cases
                                 }
+                                System.out.println("begin transition");
                                 if (currX >= BOUNDARY_X_RIGHT) {
+                                    System.out.println("touched right boundary");
                                     ballstate = BallStates.BumpedRightWallState;
                                     if (currY <= BOUNDARY_Y_TOP) {
                                         ballstate2 = BallStates.BumpedTopWallState;
@@ -179,6 +187,7 @@ public class Table extends Application {
                                     }
 
                                 } else if (currX <= BOUNDARY_X_LEFT) {
+                                    System.out.println("touched left boundary");
                                     ballstate = BallStates.BumpedLeftWallState;
                                     if (currY <= BOUNDARY_Y_TOP) {
                                         ballstate2 = BallStates.BumpedTopWallState;
@@ -192,6 +201,7 @@ public class Table extends Application {
                                         ballstate2 = BallStates.BumpedCompetitorPad;
                                     }
                                 } else if (currY >= BOUNDARY_Y_BOTTOM) {
+                                    System.out.println("touched bottom");
                                     ballstate = BallStates.BumpedBottomWallState;
                                     if (currX >= BOUNDARY_X_RIGHT) {
                                         ballstate2 = BallStates.BumpedRightWallState;
@@ -205,6 +215,7 @@ public class Table extends Application {
                                         ballstate2 = BallStates.BumpedCompetitorPad;
                                     }
                                 } else if (currY <= BOUNDARY_Y_TOP) {
+                                    System.out.println("touched top");
                                     ballstate = BallStates.BumpedTopWallState;
                                     if (currX >= BOUNDARY_X_RIGHT) {
                                         ballstate2 = BallStates.BumpedRightWallState;
@@ -218,7 +229,8 @@ public class Table extends Application {
                                         ballstate2 = BallStates.BumpedCompetitorPad;
                                     }
                                 } else if (currX >= selfRect.getX() - 100 && currX <= selfRect.getX() + 100
-                                        && currY + BALL_RADIUS <= selfRect.getY() + 5) {
+                                        && currY + BALL_RADIUS >= selfRect.getY() + 5) {
+                                    System.out.println("bumped on self.");
                                     ballstate = BallStates.BumpedSelfPad;
                                     if (currX >= BOUNDARY_X_RIGHT) {
                                         ballstate2 = BallStates.BumpedRightWallState;
@@ -227,6 +239,7 @@ public class Table extends Application {
                                     }
                                 } else if (currX >= competitorRect.getX() - 100 && currX <= competitorRect.getX() + 100
                                         && currY - BALL_RADIUS <= competitorRect.getY() - 5) {
+                                    System.out.println("bumped on competitor");
                                     ballstate = BallStates.BumpedCompetitorPad;
                                     if (currX >= BOUNDARY_X_RIGHT) {
                                         ballstate2 = BallStates.BumpedRightWallState;
@@ -234,8 +247,7 @@ public class Table extends Application {
                                         ballstate2 = BallStates.BumpedLeftWallState;
                                     }
                                 } else {
-                                    System.out.println("Err: unhandled state");
-                                    System.exit(130);
+                                    ballstate = BallStates.NormalState;
                                 }
 
                             }

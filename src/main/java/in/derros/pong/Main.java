@@ -10,6 +10,10 @@ import java.net.SocketAddress;
  */
 public class Main {
 
+    public static String server_address;
+    public static int server_port;
+    public static int this_port;
+
     private static void sendPing(String addr, int port) {
         try {
             Socket sock = new Socket(addr, port);
