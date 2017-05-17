@@ -1,2 +1,2 @@
-# ping-pong
+# 🏓 ping-pong 🏓
 Distributed ping-pong, ahh!
