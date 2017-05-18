@@ -20,8 +20,9 @@ public class Main {
             String s = "ping";
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            //out.write("ping");
-            //out.flush();
+            out.write("ping");
+            out.newLine();
+            out.flush();
             System.out.println(in.readLine());
         } catch (IOException ioException) {
             System.out.println("sendPing(): Connect error. Printing stack trace...");
@@ -41,8 +42,9 @@ public class Main {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(send.getOutputStream()));
             BufferedReader br = new BufferedReader(new InputStreamReader(send.getInputStream()));
             System.out.println("created both writer and reader.");
-            //System.out.println(br.readLine());
+            System.out.println(br.readLine());
             bw.write("pong");
+            bw.newLine();
             bw.flush();
         } catch (IOException ioException) {
             System.out.println("returnPong(): Server socket cannot be established. Printing stack trace...");
