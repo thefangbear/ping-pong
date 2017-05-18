@@ -23,6 +23,7 @@ public class Main {
             BufferedReader buff = new BufferedReader (in);
             System.out.println("Writing message...");
             out.writeBytes(s);
+            System.out.println("successfully wrote bytes");
             String response = buff.readLine();
             System.out.println("Response:");
             System.out.println(response);
@@ -41,8 +42,13 @@ public class Main {
             ServerSocket serverSock = new ServerSocket(port);
             System.out.println("returnPong(): Listening on port: " + port);
             Socket send = serverSock.accept();
+            System.out.println("accepted socket");
             DataOutputStream out = new DataOutputStream(send.getOutputStream());
-            out.writeBytes("pong");
+            BufferedReader br = new BufferedReader(new InputStreamReader(send.getInputStream()));
+            System.out.println("successfully created input/output streams");
+            System.out.println("msg is:");
+            System.out.println(br.readLine());
+            out.writeChars("pong");
         } catch (IOException ioException) {
             System.out.println("returnPong(): Server socket cannot be established. Printing stack trace...");
             ioException.printStackTrace();
