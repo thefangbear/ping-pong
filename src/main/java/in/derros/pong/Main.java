@@ -40,6 +40,7 @@ public class Main {
             System.out.println("accepted socket");
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(send.getOutputStream()));
             BufferedReader br = new BufferedReader(new InputStreamReader(send.getInputStream()));
+            System.out.println("created both writer and reader.");
             System.out.println(br.readLine());
             bw.write("pong");
             bw.flush();
