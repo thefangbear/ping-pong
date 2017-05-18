@@ -18,16 +18,11 @@ public class Main {
         try {
             Socket sock = new Socket(addr, port);
             String s = "ping";
-            DataOutputStream out = new DataOutputStream(sock.getOutputStream());
-            InputStreamReader in = new InputStreamReader(sock.getInputStream());
-            BufferedReader buff = new BufferedReader (in);
-            System.out.println("Writing message...");
-            out.writeBytes(s);
-            System.out.println("successfully wrote bytes");
-            String response = buff.readLine();
-            System.out.println("Response:");
-            System.out.println(response);
-
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+            out.write("ping");
+            out.flush();
+            System.out.println(in.readLine());
         } catch (IOException ioException) {
             System.out.println("sendPing(): Connect error. Printing stack trace...");
             ioException.printStackTrace();
@@ -43,12 +38,11 @@ public class Main {
             System.out.println("returnPong(): Listening on port: " + port);
             Socket send = serverSock.accept();
             System.out.println("accepted socket");
-            DataOutputStream out = new DataOutputStream(send.getOutputStream());
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(send.getOutputStream()));
             BufferedReader br = new BufferedReader(new InputStreamReader(send.getInputStream()));
-            System.out.println("successfully created input/output streams");
-            System.out.println("msg is:");
             System.out.println(br.readLine());
-            out.writeChars("pong");
+            bw.write("pong");
+            bw.flush();
         } catch (IOException ioException) {
             System.out.println("returnPong(): Server socket cannot be established. Printing stack trace...");
             ioException.printStackTrace();
