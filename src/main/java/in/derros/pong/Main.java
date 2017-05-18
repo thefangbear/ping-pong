@@ -53,28 +53,34 @@ public class Main {
 
     // entry point
     public static void main(String[] args) {
-        if(args[0].equals("--ping")) {
-            String hostAddress = args[1];
-            int hostPort = Integer.parseInt(args[2]);
-            sendPing(hostAddress, hostPort);
-        } else if (args[0].equals("--pong")) {
-            int port = Integer.parseInt(args[1]);
-            returnPong(port);
-        } else if (args[0].equals("--real-ping")) {
-            // goes real!!
-            Main.operating_mode = 0;
-            Main.server_port = Integer.parseInt(args[2]);
-            Main.server_address = args[1];
-            RealPing.getRealPing();
-            Table.startShow();
-        } else if (args[0].equals("--real-pong")) {
-            Main.operating_mode = 1;
-            Main.this_port = Integer.parseInt(args[1]);
-            RealPong.createPongServer();
-            Table.startShow();
-        } else if (args[0].equals("--test")) {
-            System.out.println("haha... if anything?!");
-        } else {
+        try {
+            if (args[0].equals("--ping")) {
+                String hostAddress = args[1];
+                int hostPort = Integer.parseInt(args[2]);
+                sendPing(hostAddress, hostPort);
+            } else if (args[0].equals("--pong")) {
+                int port = Integer.parseInt(args[1]);
+                returnPong(port);
+            } else if (args[0].equals("--real-ping")) {
+                // goes real!!
+                Main.operating_mode = 0;
+                Main.server_port = Integer.parseInt(args[2]);
+                Main.server_address = args[1];
+                RealPing.getRealPing();
+                Table.startShow();
+            } else if (args[0].equals("--real-pong")) {
+                Main.operating_mode = 1;
+                Main.this_port = Integer.parseInt(args[1]);
+                RealPong.createPongServer();
+                Table.startShow();
+            } else if (args[0].equals("--test")) {
+                System.out.println("haha... if anything?!");
+            } else {
+                // print usage
+                System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>\n" +
+                        "-real-ping <server address> <server port>\n--real-pong <local port>\n--test\n");
+            }
+        } catch (ArrayIndexOutOfBoundsException aiobe) {
             // print usage
             System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>\n" +
                     "-real-ping <server address> <server port>\n--real-pong <local port>\n--test\n");

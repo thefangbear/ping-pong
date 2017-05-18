@@ -1,2 +1,4 @@
 rootProject.name = 'pingpong'
+include 'src'
+findProject(':src')?.name = 'pingpong'
 
