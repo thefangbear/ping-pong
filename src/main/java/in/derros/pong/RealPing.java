@@ -32,7 +32,7 @@ class RealPing {
         if (pingClient == null) {
             System.out.println("Client: Connecting to Server...");
             pingClient = new RealPing(Main.server_address, Main.server_port);
-            (new Thread(() -> {
+            /*(new Thread(() -> {
                 while(pingClient.isConnected()) {
                     try {
                         Double d = pingClient.getCompetitorXCoord();
@@ -44,7 +44,7 @@ class RealPing {
                     }
                 }
             })).start();
-
+*/
         }
         return pingClient;
     }

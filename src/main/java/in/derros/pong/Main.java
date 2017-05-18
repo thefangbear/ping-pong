@@ -78,6 +78,24 @@ public class Main {
                 Table.startShow();
             } else if (args[0].equals("--test")) {
                 System.out.println("haha... if anything?!");
+            } else if (args[0].equals("--test-ping")) {
+                Main.server_address = args[1];
+                Main.server_port = Integer.parseInt(args[2]);
+                RealPing.getRealPing().sendSelfXCoord(3.2);
+                System.out.println(RealPing.getRealPing().getCompetitorXCoord());
+                RealPing.getRealPing().sendSelfXCoord(6.4);
+                System.out.println(RealPing.getRealPing().getCompetitorXCoord());
+                RealPing.getRealPing().sendSelfXCoord((7.8));
+                System.out.println(RealPing.getRealPing().getCompetitorXCoord());
+
+            } else if (args[0].equals("--test-pong")) {
+                Main.this_port = Integer.parseInt(args[1]);
+                RealPong.createPongServer().sendSelfXCoord(9.6);
+                System.out.println(RealPong.createPongServer().getCompetitorXCoord());
+                RealPong.createPongServer().sendSelfXCoord(13.4);
+                System.out.println(RealPong.createPongServer().getCompetitorXCoord());
+                RealPong.createPongServer().sendSelfXCoord(6.6);
+                System.out.println(RealPong.createPongServer().getCompetitorXCoord());
             } else {
                 // print usage
                 System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>\n" +
@@ -87,6 +105,8 @@ public class Main {
             // print usage
             System.out.println("Usage:\n--ping <server address> <server port>\n--pong <local port>\n" +
                     "-real-ping <server address> <server port>\n--real-pong <local port>\n--test\n");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

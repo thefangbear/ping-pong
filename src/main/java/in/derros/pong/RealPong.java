@@ -37,6 +37,7 @@ public class RealPong {
                 System.exit(130);
             }
             // now let's run a thread
+            /*
             (new Thread(() -> {
                 while(pongServer.isConnected()) {
                     try {
@@ -49,7 +50,7 @@ public class RealPong {
                     }
                 }
             })).start();
-            return pongServer;
+            */return pongServer;
         } else {
             return pongServer;
         }
