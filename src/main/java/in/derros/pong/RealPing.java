@@ -30,6 +30,7 @@ class RealPing {
 
     public synchronized static RealPing getRealPing() {
         if (pingClient == null) {
+            System.out.println("Client: Connecting to Server...");
             pingClient = new RealPing(Main.server_address, Main.server_port);
             (new Thread(() -> {
                 while(pingClient.isConnected()) {

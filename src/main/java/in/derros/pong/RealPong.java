@@ -29,6 +29,7 @@ public class RealPong {
         if (pongServer == null) {
             pongServer = new RealPong(Main.this_port);
             try {
+                System.out.println("Server: Waiting for connection...");
                 pongServer.createAndAccept();
             } catch (IOException e) {
                 System.out.println("error accepting connection");
