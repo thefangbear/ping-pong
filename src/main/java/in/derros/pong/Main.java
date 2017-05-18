@@ -22,7 +22,7 @@ public class Main {
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             out.write("ping");
             out.flush();
-            System.out.println(in.readLine());
+            //System.out.println(in.readLine());
         } catch (IOException ioException) {
             System.out.println("sendPing(): Connect error. Printing stack trace...");
             ioException.printStackTrace();
